@@ -7,18 +7,31 @@ const initialState = {
     info: null,
 };
 
+const name = {
+    setInfo: "manager-set-info",
+    updateName:"manager-update-name",
+};
+
 function setInfo(info) {
     return { type: name.setInfo, payload: info };
+}
+function updateName(newName){
+    return {type: name.updateName, payload: newName}
+}
+function setToken(token){
+    Cookies.set("token",token);
+    axios.defaults.headers['Authorization'] = "Bearer " + token;
 }
 const login = (values, onDone) => async (dispatch, getState) => {
     try {
         const { account, password } = values;
         const formdata = { account, password: sha256(password) };
         const res = await axios.post("/api/manager/login", formdata);
-        const { e, m, info } = res.data;
+        const { e, m, info,token } = res.data;
         console.log(res.data);
         dispatch(actions.setInfo(info));
         if (e) throw new Error(m);
+        setToken(token)
         toast(m, { type: "success" });
         if (onDone ) onDone(true);
     } catch (e) {
@@ -30,8 +43,8 @@ const login = (values, onDone) => async (dispatch, getState) => {
 };
 
 const autoLogin = () => async (dispatch, getState) =>{
-    const current = Cookies.get("csrf_access_token")
-   
+    const current = Cookies.get("token")
+    setToken(current)
     if(current){
         try{
             const res = await axios.get("/api/manager/auto-login", {},{withCredentials:true});
@@ -52,20 +65,23 @@ const logout = () => (dispatch, getState) =>{
     dispatch(actions.setInfo(null))
 }
 
-const name = {
-    setInfo: "manager-set-info",
-};
+
 export const actions = {
     setInfo,
     login,
     logout,
     autoLogin,
+    updateName,
 };
 const reducer = (state = initialState, action) => {
     switch (action.type) {
         case name.setInfo:
             const info = action.payload;
             return { ...state, info };
+        case name.updateName:
+            const newName = action.payload;
+            const ns =  {...state,info:{...state.info,FULL_NAME:newName}}
+            return ns
         default:
             return { ...state };
     }

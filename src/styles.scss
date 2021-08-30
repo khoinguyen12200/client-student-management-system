@@ -65,6 +65,7 @@ body {
                 color:rgb(126, 178, 255);
                 font-size:1.2em;
                 overflow: hidden;
+                white-space: nowrap;
             }
             .toggle {
                 font-size: 2em;
@@ -115,7 +116,7 @@ body {
         margin-top:10px;
         display:flex;
         flex-direction: column;
-        width: 500px;
+        min-width: 500px;
     }
     .btn-space{
         display:flex;
@@ -124,11 +125,58 @@ body {
     }
 }
 
+.change-password-page{
+    .form-container{
+        display:flex;
+        justify-content:center;
+    }
+    .change-password-form{
+        min-width:500px;
+        display:flex;
+        flex-direction: column;
+        align-items: left;
+    }
+}
+.change-name-page{
+    .form-container{
+        display:flex;
+        justify-content:center;
+    }
+    .change-name-form{
+        min-width:500px;
+        display:flex;
+        flex-direction: column;
+        align-items: left;
+    }
+}
+
+.department{
+    .department-content{
+        display:flex;
+        flex-direction: column;
+        .headSpace{
+            display:flex;
+            justify-content:space-between;
+            padding:10px;
+            align-items: center;
+            button{
+                min-width: 100px;
+            }
+        }
+        .RowButton{
+            display:flex;
+            flex-wrap: wrap;
+            justify-content:flex-end;
+        }
+    }
+}
+
+
 .input-field {
+    text-align: left;
     .i-error {
         border-radius: 5px;
         padding: 5px;
-        border: 1px solid rgb(109, 0, 0);
         background-color: rgb(255, 210, 210);
         color: rgb(109, 0, 0);
         margin-top: 5px;

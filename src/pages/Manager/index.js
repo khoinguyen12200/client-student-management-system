@@ -1,6 +1,7 @@
 import React from "react";
 import { Switch, Route, Link ,useLocation,Redirect } from "react-router-dom";
 import { AiFillLeftCircle } from "react-icons/ai";
+import {FaSchool} from 'react-icons/fa'
 import { MdSupervisorAccount } from "react-icons/md";
 import { motion } from "framer-motion";
 import { useSelector } from "react-redux";
@@ -8,6 +9,9 @@ import { useSelector } from "react-redux";
 
 import Account from "./Account"
 import ChangePassword from "./ChangePassword";
+import ChangeName from "./ChangeName";
+
+import Deparment from "./Deparment"
 
 const variants = {
     expanded: {
@@ -61,10 +65,10 @@ export default function Manager() {
                     </LinkIcon>
                     <LinkIcon
                         expanded={expanded}
-                        link="/manager/account1"
-                        icon={<MdSupervisorAccount />}
+                        link="/manager/department"
+                        icon={<FaSchool />}
                     >
-                        Tài khoản
+                        Khoa - Đoàn thể
                     </LinkIcon>
                     <LinkIcon
                         expanded={expanded}
@@ -86,6 +90,8 @@ export default function Manager() {
                 <Switch>
                     <Route path="/manager/account" exact><Account/></Route>
                     <Route path="/manager/account/change-password" exact><ChangePassword/></Route>
+                    <Route path="/manager/account/change-name" exact> <ChangeName/></Route>
+                    <Route path="/manager/department" exact><Deparment/></Route>
                 </Switch>
             </div>
         </div>

@@ -9,8 +9,7 @@ import Home from './pages/Home'
 import Login from './pages/Login'
 import Navbar from './components/Navbar'
 import Manager from './pages/Manager'
-import 'bootstrap';
-import 'bootstrap/dist/css/bootstrap.min.css'; 
+
 import 'react-toastify/dist/ReactToastify.css';
 
 import {useSelector,useDispatch} from 'react-redux'
