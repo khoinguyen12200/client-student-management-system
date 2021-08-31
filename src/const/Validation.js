@@ -33,4 +33,6 @@ export const departmentSortName = Yup.string()
     .max(9, "Không được nhiều hơn 9 ký tự")
     .matches(/^[a-zA-Z-]{0,}$/, "Các ký tự được phép là chữ và dấu gạch ngang");
 
+export const majorName = departmentName
+export const majorSortName =  departmentSortName
 export const id = Yup.number().required("Không được bỏ trống")

@@ -2,9 +2,7 @@ import React, { ReactElement } from "react";
 import { ErrorMessage, useField } from "formik";
 import { AiFillEyeInvisible, AiFillEye } from "react-icons/ai";
 import { AiOutlineLoading3Quarters as Loading } from "react-icons/ai";
-import {motion} from 'framer-motion';
-
-
+import { motion } from "framer-motion";
 
 export default function InputField(props) {
     const { label, value, onChange, type, error, ...rest } = props;
@@ -55,28 +53,54 @@ export function FormikField({ label, ...rest }) {
     return <InputField label={label} {...field} {...rest} error={error} />;
 }
 
+export function SelectField(props) {
+    const { label, value, data,defaultValue, onChange, type, error, ...rest } = props;
 
+    return (
+        <div className="input-field mb-3">
+            {label && <label className="form-label">{label}</label>}
+
+            <select  {...rest} onChange={onChange} className="custom-select">
+                {defaultValue === null &&  <option value={null  } selected={true}>Hãy chọn giá trị</option>}
+                {data.map(({ key, value }, index) => (
+                    <option value={value} selected={value===defaultValue}>{key}</option>
+                ))}
+            </select>
+
+            {error && <div className="i-error">{error}</div>}
+        </div>
+    );
+}
+
+export function FormikSelectField({ label, ...rest }) {
+    const [field, meta] = useField(rest);
+
+    const error = React.useMemo(() => {
+        if (meta.touched && meta.error) {
+            return meta.error;
+        }
+        return "";
+    }, [meta]);
+
+    return <SelectField label={label} {...field} {...rest} error={error} />;
+}
 
 export function LoadingButton(props) {
-    const {loading,children,...rest} = props;
-    const [firstRender,setFirst] = React.useState(true);
+    const { loading, children, ...rest } = props;
+    const [firstRender, setFirst] = React.useState(true);
     const variants = {
-        animate:{
-            width: loading ? "auto" : 0
+        animate: {
+            width: loading ? "auto" : 0,
         },
-        initial:{
-            width: !loading ? "auto" : 0 
-        }
-    }
-    React.useEffect(()=>{
-        setFirst(false)
-    },[])
+        initial: {
+            width: !loading ? "auto" : 0,
+        },
+    };
+    React.useEffect(() => {
+        setFirst(false);
+    }, []);
     return (
-        <button
-
-            {...rest}
-            disabled={loading}
-        >
+        <button {...rest} disabled={loading}>
             <div className="loading-button">
                 <motion.div
                     variants={!firstRender ? variants : undefined}
@@ -84,10 +108,7 @@ export function LoadingButton(props) {
                     initial={"initial"}
                     style={{ overflow: "hidden", width: 0 }}
                 >
-                    <Loading
-                        className="loadingsym"
-                        style={{ lineHeight: 0 }}
-                    />
+                    <Loading className="loadingsym" style={{ lineHeight: 0 }} />
                 </motion.div>
                 <div className="child">{children}</div>
             </div>

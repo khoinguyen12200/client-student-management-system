@@ -27,8 +27,9 @@ const login = (values, onDone) => async (dispatch, getState) => {
         const { account, password } = values;
         const formdata = { account, password: sha256(password) };
         const res = await axios.post("/api/manager/login", formdata);
+        
         const { e, m, info,token } = res.data;
-        console.log(res.data);
+      
         dispatch(actions.setInfo(info));
         if (e) throw new Error(m);
         setToken(token)
@@ -77,6 +78,7 @@ const reducer = (state = initialState, action) => {
     switch (action.type) {
         case name.setInfo:
             const info = action.payload;
+            console.log("info",info)
             return { ...state, info };
         case name.updateName:
             const newName = action.payload;

@@ -16,6 +16,7 @@ import InputField, {
 export default function Login() {
     const dispatch = useDispatch();
     const info = useSelector(state => state.manager.info)
+
     const [redirect,setRedirect] = React.useState(null)
     async function onSubmit(values, { setSubmitting }) {
         setSubmitting(true);

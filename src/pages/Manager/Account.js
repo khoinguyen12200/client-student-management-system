@@ -3,8 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import { actions } from "../../redux/store";
 import { Redirect } from "react-router-dom";
-import * as Validation from "../../const/Validation"
-
+import * as Validation from "../../const/Validation";
 
 export default function Account() {
     const dispatch = useDispatch();
@@ -23,23 +22,41 @@ export default function Account() {
             <h1>Thông tin tài khoản</h1>
             <div className="content mt-5">
                 <div className="input-group mb-3">
-                    <span className="input-group-text">Tên đăng nhập</span>
+                    <div className="input-group-prepend">
+                        <span className="input-group-text">Tên đăng nhập</span>
+                    </div>
+
                     <div className="form-control">{info.ACCOUNT}</div>
                 </div>
                 <div className="input-group mb-3">
-                    <span className="input-group-text">Mật khẩu</span>
+                    <div className="input-group-prepend">
+                        <span className="input-group-text">Mật khẩu</span>
+                    </div>
+
                     <div className="form-control">******</div>
-                    <Link
-                        to="/manager/account/change-password"
-                        className="btn btn-secondary"
-                    >
-                        Thay đổi
-                    </Link>
+                    <div className="input-group-prepend">
+                        <Link
+                            to="/manager/account/change-password"
+                            className="btn btn-secondary"
+                        >
+                            Thay đổi
+                        </Link>
+                    </div>
                 </div>
                 <div className="input-group mb-3">
-                    <span className="input-group-text">Tên hiển thị</span>
+                    <div className="input-group-prepend">
+                        <span className="input-group-text">Tên hiển thị</span>
+                    </div>
+
                     <div className="form-control">{info.FULL_NAME}</div>
-                    <Link to="/manager/account/change-name" className="btn btn-secondary">Thay đổi</Link>
+                    <div className="input-group-prepend">
+                        <Link
+                            to="/manager/account/change-name"
+                            className="btn btn-secondary"
+                        >
+                            Thay đổi
+                        </Link>
+                    </div>
                 </div>
                 <div className="btn-space">
                     <button onClick={logout} className="btn btn-outline-danger">

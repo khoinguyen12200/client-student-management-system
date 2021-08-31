@@ -1,6 +1,6 @@
 import React from "react";
 import { Switch, Route, Link ,useLocation,Redirect } from "react-router-dom";
-import { AiFillLeftCircle } from "react-icons/ai";
+import { AiFillLeftCircle,AiFillDatabase } from "react-icons/ai";
 import {FaSchool} from 'react-icons/fa'
 import { MdSupervisorAccount } from "react-icons/md";
 import { motion } from "framer-motion";
@@ -12,7 +12,8 @@ import ChangePassword from "./ChangePassword";
 import ChangeName from "./ChangeName";
 
 import Deparment from "./Deparment"
-
+import Major from "./Major"
+import MajorClass from './MajorClass'
 const variants = {
     expanded: {
         width: 150,
@@ -72,17 +73,17 @@ export default function Manager() {
                     </LinkIcon>
                     <LinkIcon
                         expanded={expanded}
-                        link="/manager/account2"
-                        icon={<MdSupervisorAccount />}
+                        link="/manager/major"
+                        icon={<AiFillDatabase />}
                     >
-                        Tài khoản
+                        Chuyên ngành
                     </LinkIcon>
                     <LinkIcon
                         expanded={expanded}
-                        link="/manager/account3"
+                        link="/manager/class-major"
                         icon={<MdSupervisorAccount />}
                     >
-                        Tài khoản
+                        Lớp chuyên ngành
                     </LinkIcon>
                 </div>
             </div>
@@ -92,6 +93,8 @@ export default function Manager() {
                     <Route path="/manager/account/change-password" exact><ChangePassword/></Route>
                     <Route path="/manager/account/change-name" exact> <ChangeName/></Route>
                     <Route path="/manager/department" exact><Deparment/></Route>
+                    <Route path="/manager/major" exact><Major/></Route>
+                    <Route path="/manager/class-major" exact><MajorClass/></Route>
                 </Switch>
             </div>
         </div>
