@@ -25,6 +25,8 @@ function App() {
         if (!info) return;
         dispatch(actions.departments.reloadDepartments());
         dispatch(actions.majors.reloadMajors());
+        dispatch(actions.class.reloadClass())
+        dispatch(actions.instructor.reloadInstructor());
     }, [info]);
     return (
         <div className="App">

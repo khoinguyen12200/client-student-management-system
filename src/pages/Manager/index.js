@@ -1,7 +1,9 @@
 import React from "react";
 import { Switch, Route, Link ,useLocation,Redirect } from "react-router-dom";
 import { AiFillLeftCircle,AiFillDatabase } from "react-icons/ai";
-import {FaSchool} from 'react-icons/fa'
+import {FaSchool,FaChalkboardTeacher} from 'react-icons/fa'
+import {HiUserGroup} from 'react-icons/hi'
+import {MdAccountBox} from 'react-icons/md'
 import { MdSupervisorAccount } from "react-icons/md";
 import { motion } from "framer-motion";
 import { useSelector } from "react-redux";
@@ -14,6 +16,8 @@ import ChangeName from "./ChangeName";
 import Deparment from "./Deparment"
 import Major from "./Major"
 import MajorClass from './MajorClass'
+import Instructor from "./Instructor"
+
 const variants = {
     expanded: {
         width: 150,
@@ -60,7 +64,7 @@ export default function Manager() {
                     <LinkIcon
                         expanded={expanded}
                         link="/manager/account"
-                        icon={<MdSupervisorAccount/>}
+                        icon={<MdAccountBox/>}
                     >
                         Tài khoản
                     </LinkIcon>
@@ -81,9 +85,16 @@ export default function Manager() {
                     <LinkIcon
                         expanded={expanded}
                         link="/manager/class-major"
-                        icon={<MdSupervisorAccount />}
+                        icon={<HiUserGroup />}
                     >
                         Lớp chuyên ngành
+                    </LinkIcon>
+                    <LinkIcon
+                        expanded={expanded}
+                        link="/manager/instructor"
+                        icon={<FaChalkboardTeacher />}
+                    >
+                        Giáo viên cố vấn
                     </LinkIcon>
                 </div>
             </div>
@@ -95,6 +106,7 @@ export default function Manager() {
                     <Route path="/manager/department" exact><Deparment/></Route>
                     <Route path="/manager/major" exact><Major/></Route>
                     <Route path="/manager/class-major" exact><MajorClass/></Route>
+                    <Route path="/manager/instructor" exact><Instructor/></Route>
                 </Switch>
             </div>
         </div>

@@ -9,6 +9,7 @@
     "@testing-library/user-event": "^12.1.10",
     "axios": "^0.21.1",
     "bootstrap": "4.6",
+    "dateformat": "^4.5.1",
     "formik": "^2.2.9",
     "framer-motion": "^4.1.17",
     "js-cookie": "^3.0.0",

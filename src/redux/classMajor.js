@@ -13,7 +13,7 @@ function setClass(d){
 }
 
 const reloadClass = () => async(dispatch)=>{
-    const res = await axios.get("/api/manager/class-major");
+    const res = await axios.get("/api/class-major");
     dispatch(actions.setClass(res.data))
 }
 

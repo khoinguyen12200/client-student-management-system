@@ -63,7 +63,7 @@ export function SelectField(props) {
             <select  {...rest} onChange={onChange} className="custom-select">
                 {defaultValue === null &&  <option value={null  } selected={true}>Hãy chọn giá trị</option>}
                 {data.map(({ key, value }, index) => (
-                    <option value={value} selected={value===defaultValue}>{key}</option>
+                    <option key={value} value={value} selected={value===defaultValue}>{key}</option>
                 ))}
             </select>
 

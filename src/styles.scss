@@ -150,19 +150,25 @@ body {
     }
 }
 
+.headSpace{
+    display:flex;
+    justify-content:space-between;
+    padding:10px;
+    align-items: flex-end;
+    button{
+        min-width: 100px;
+    }
+    .head1{
+        display:flex;
+        flex-direction: column;
+    }
+}
+
 .department{
     .department-content{
         display:flex;
         flex-direction: column;
-        .headSpace{
-            display:flex;
-            justify-content:space-between;
-            padding:10px;
-            align-items: center;
-            button{
-                min-width: 100px;
-            }
-        }
+
         .RowButton{
             display:flex;
             flex-wrap: wrap;
@@ -172,34 +178,13 @@ body {
 }
 
 .major-page{
-    .headSpace{
-        display:flex;
-        justify-content:space-between;
-        padding:10px;
-        align-items: flex-end;
-        button{
-            min-width: 100px;
-        }
-        .head1{
-            display:flex;
-            flex-direction: column;
-        }
-    }
+
 }
 .major-class-page{
-    .headSpace{
-        display:flex;
-        justify-content:space-between;
-        padding:10px;
-        align-items: flex-end;
-        button{
-            min-width: 100px;
-        }
-        .head1{
-            display:flex;
-            flex-direction: column;
-        }
-    }
+
+}
+.instructor-page{
+    
 }
 
 .input-field {

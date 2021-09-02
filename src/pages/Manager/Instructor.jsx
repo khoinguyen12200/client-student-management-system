@@ -13,55 +13,38 @@ import { useDispatch, useSelector } from "react-redux";
 import { actions } from "../../redux/store";
 import InputField, {
     FormikField,
-    FormikSelectField,
     LoadingButton,
+    FormikSelectField,
 } from "../../components/InputField";
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
 import { sha256 } from "js-sha256";
+import { date } from "yup/lib/locale";
+import * as Const from "../../const";
 
-export default function MajorsPage() {
+export default function InstructorPage() {
+    // -------------- STATE
     const [search, setSearch] = React.useState("");
-    const departments = useSelector((state) => state.departments.list);
-    const majors = useSelector((state) => state.majors.list);
 
-    const [departFilter, setDepartFilter] = React.useState(-1);
-    function onSelectChange(e) {
-        setDepartFilter(e.target.value);
-    }
+    const instructors = useSelector((state) => state.instructor.list);
 
-    const majorsAfterFilter = React.useMemo(() => {
-        try {
-
-            const arr = majors.filter((major) => {
-                let { ID, DEPARTMENT, NAME, SORT_NAME } = major;
-                ID = (ID + "").trim().toLowerCase();
-
-                NAME = (NAME + "").trim().toLowerCase();
-                SORT_NAME = (SORT_NAME + "").trim().toLowerCase();
-
-                if (
-                    ID.includes(search) ||
-                    NAME.includes(search) ||
-                    SORT_NAME.includes(search)
-                ) {
-                    return true;
-                }
-                return false;
-            });
-            const arr2 = arr.filter((major)=>(departFilter==-1 || major.DEPARTMENT == departFilter))
-            return arr2;
-        } catch (err) {
-            return [];
-        }
-    }, [majors, search, departFilter]);
+    const arrAfterFiltter = React.useMemo(() => {
+        let arr = instructors.concat([]);
+        arr = arr.filter(ins => {
+            const {FULL_NAME,INSTRUCTOR_ID} = ins;
+            const v1 = (FULL_NAME+"").toLowerCase().trim();
+            const v2 = (INSTRUCTOR_ID+"").trim().toLowerCase();
+            return v1.includes(search) || v2.includes(search);
+        })
+        return arr;
+    },[instructors,search])
 
     return (
-        <div className="major-page p-3">
+        <div className="instructor-page p-3">
             <center className="mb-3">
-                <h1>Chuyên ngành</h1>
+                <h1>Giáo viên cố vấn</h1>
             </center>
             <div className="headSpace">
-                <div className="head1">
+                <div>
                     <div className="input-group mb-3">
                         <div className="input-group-prepend">
                             <span className="input-group-text">
@@ -76,85 +59,46 @@ export default function MajorsPage() {
                             className="form-control"
                         />
                     </div>
-                    <div className="input-group mb-3">
-                        <div className="input-group-prepend">
-                            <label
-                                className="input-group-text"
-                                for="inputGroupSelect01"
-                            >
-                                Lọc theo khoa
-                            </label>
-                        </div>
-                        <select
-                            onChange={onSelectChange}
-                            className="custom-select"
-                            id="inputGroupSelect01"
-                        >
-                            <option selected value={-1}>
-                                Chọn giá trị
-                            </option>
-                            {departments.map(({ ID, NAME }) => (
-                                <option key={ID} value={ID}>
-                                    {NAME}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
                 </div>
-                <div>
-                    <AddModal departments={departments} />
-                </div>
+                <AddModal />
             </div>
-            <div className="list">
-                <MajorList majors={majorsAfterFilter} />
-            </div>
+            <InstructorList list={arrAfterFiltter} />
         </div>
     );
 }
 
-function AddModal({ departments }) {
+function AddModal({}) {
     const dispatch = useDispatch();
+    const initialValues = {
+        instructorId: "",
+        fullName: "",
+        dateOfBirth: "",
+        gender: "",
+        citizenId: "",
+    };
+    const validationSchema = Yup.object({
+        fullName: Validation.name,
+        instructorId: Validation.instructorId,
+        dateOfBirth: Validation.dateOfBirth,
+        gender: Validation.gender,
+        citizenId: Validation.citizenId,
+    });
+
     const [open, setOpen] = React.useState(false);
     const toggle = () => {
         setOpen(!open);
     };
-
-    const dataSelect = React.useMemo(() => {
-        try {
-            const arr = departments.map((department) => ({
-                key: department.NAME,
-                value: department.ID,
-            }));
-            return arr;
-        } catch (e) {
-            return [];
-        }
-    }, [departments]);
-    const initialValues = {
-        id: "",
-        name: "",
-        sortName: "",
-        department: "",
-    };
-    const validationSchema = Yup.object({
-        name: Validation.departmentName,
-        sortName: Validation.departmentSortName,
-        department: Validation.id,
-    });
     async function onSubmit(values, { setSubmitting, resetForm }) {
         setSubmitting(true);
         try {
-            let data = values;
-            if (values.id != "" || values.id != null) data.id = values.id;
-
-            const res = await axios.post("/api/manager/major/insert", data, {
+            const res = await axios.post("/api/instructor", values, {
                 withCredentials: true,
             });
             const { e, m } = res.data;
             if (e) throw new Error(m);
             toast(m, { type: "success" });
             toggle();
-            dispatch(actions.majors.reloadMajors());
+            dispatch(actions.instructor.reloadInstructor());
             resetForm(initialValues);
         } catch (e) {
             toast(e.message, { type: "error" });
@@ -167,9 +111,8 @@ function AddModal({ departments }) {
             <button onClick={toggle} className="btn btn-outline-primary">
                 Thêm
             </button>
-
             <Modal isOpen={open} toggle={toggle}>
-                <ModalHeader toggle={toggle}>Thêm chuyên ngành</ModalHeader>
+                <ModalHeader toggle={toggle}>Thêm giáo viên</ModalHeader>
                 <Formik
                     initialValues={initialValues}
                     validationSchema={validationSchema}
@@ -178,22 +121,30 @@ function AddModal({ departments }) {
                     {(formik) => (
                         <Form>
                             <ModalBody>
+                                <FormikField
+                                    type="text"
+                                    label="Mã cán bộ"
+                                    name="instructorId"
+                                />
+                                <FormikField
+                                    type="text"
+                                    label="Họ và tên"
+                                    name="fullName"
+                                />
+                                <FormikField
+                                    label="Ngày sinh"
+                                    name="dateOfBirth"
+                                    type="date"
+                                />
                                 <FormikSelectField
+                                    label="Giới tính"
+                                    name="gender"
+                                    data={Validation.dataSelectGender}
                                     defaultValue={null}
-                                    data={dataSelect}
-                                    label="Khoa"
-                                    name="department"
                                 />
                                 <FormikField
-                                    type="number"
-                                    label="ID"
-                                    placeholder="Có thể bỏ trống"
-                                    name="id"
-                                />
-                                <FormikField label="Tên ngành" name="name" />
-                                <FormikField
-                                    label="Tên viết tắt"
-                                    name="sortName"
+                                    label="Căn cước công dân"
+                                    name="citizenId"
                                 />
                             </ModalBody>
                             <ModalFooter>
@@ -220,26 +171,29 @@ function AddModal({ departments }) {
     );
 }
 
-function MajorList({ majors }) {
+function InstructorList({ list }) {
     return (
         <div className="major-list mt-3">
             <table className="table table-bordered table-striped">
                 <thead className="thead-dark">
                     <tr>
-                        <th scope="col">ID</th>
-
-                        <th scope="col">Tên chuyên ngành</th>
-                        <th scope="col">Tên rút gọn</th>
-                        <th scope="col">Thuộc khoa</th>
+                        <th scope="col">Mã giáo viên</th>
+                        <th scope="col">Họ và tên</th>
+                        <th scope="col">Ngày sinh</th>
+                        <th scope="col">Giới tính</th>
+                        <th scope="col">Chứng minh thư</th>
                         <th scope="col">
                             <center>Hành động</center>
                         </th>
                     </tr>
                 </thead>
                 <tbody>
-                    {majors &&
-                        majors.map((major) => (
-                            <Major major={major} key={major.ID} />
+                    {list &&
+                        list.map((instructor) => (
+                            <Instructor
+                                instructor={instructor}
+                                key={instructor.ID}
+                            />
                         ))}
                 </tbody>
             </table>
@@ -247,56 +201,47 @@ function MajorList({ majors }) {
     );
 }
 
-function Major({ major }) {
-    const { ID, NAME, SORT_NAME, DEPARTMENT } = major;
-    const departments = useSelector((state) => state.departments.list);
-    const departmentName = React.useMemo(() => {
-        const d = departments.find((de) => de.ID === DEPARTMENT);
-        return d && d.NAME;
-    }, [departments, DEPARTMENT]);
+function Instructor({ instructor }) {
+    const { INSTRUCTOR_ID, FULL_NAME, DATE_OF_BIRTH, GENDER, CITIZEN_ID } =
+        instructor;
+    const dateOfBirth = React.useMemo(() => {
+        const str = Const.toVNDate(DATE_OF_BIRTH);
+        return str;
+    }, [DATE_OF_BIRTH]);
     return (
         <tr>
-            <th scope="row">{ID}</th>
-
-            <td>{NAME}</td>
-            <td>{SORT_NAME}</td>
-            <td>{departmentName || ""}</td>
+            <th>{INSTRUCTOR_ID}</th>
+            <td>{FULL_NAME}</td>
+            <td>{dateOfBirth}</td>
+            <td>{GENDER == "M" ? "Nam" : "Nữ"}</td>
+            <td>{CITIZEN_ID}</td>
             <td>
                 <center>
-                    <EditMajor major={major} />
-                    <DeleteMajorModal major={major} />
+                    <EditInstructor instructor={instructor}/>
+                    <DeleteInstructor instructor={instructor}/>
                 </center>
             </td>
         </tr>
     );
 }
 
-function EditMajor({ major }) {
+function EditInstructor({ instructor }) {
     const dispatch = useDispatch();
-    const departments = useSelector((state) => state.departments.list);
-    const dataSelect = React.useMemo(() => {
-        try {
-            const arr = departments.map((department) => ({
-                key: department.NAME,
-                value: department.ID,
-            }));
-            return arr;
-        } catch (e) {
-            return [];
-        }
-    }, [departments]);
-    const initialValues = React.useMemo(() => {
-        return {
-            department: major.DEPARTMENT,
-            name: major.NAME,
-            sortName: major.SORT_NAME,
-            id: major.ID,
-        };
-    }, [major]);
+    const { INSTRUCTOR_ID, FULL_NAME, DATE_OF_BIRTH, GENDER, CITIZEN_ID } =
+    instructor;
+    const initialValues = {
+        instructorId: INSTRUCTOR_ID,
+        fullName: FULL_NAME,
+        dateOfBirth: Const.toStandardDate(DATE_OF_BIRTH),
+        gender: GENDER,
+        citizenId: CITIZEN_ID,
+    };
     const validationSchema = Yup.object({
-        name: Validation.majorName,
-        sortName: Validation.majorSortName,
-        id: Validation.id,
+        fullName: Validation.name,
+        instructorId: Validation.instructorId,
+        dateOfBirth: Validation.dateOfBirth,
+        gender: Validation.gender,
+        citizenId: Validation.citizenId,
     });
     const [open, setOpen] = React.useState(false);
     const toggle = () => {
@@ -304,16 +249,12 @@ function EditMajor({ major }) {
     };
     async function onSubmit(values, { setSubmitting, resetForm }) {
         setSubmitting(true);
-        let sendData = { id: major.ID };
-        if (values.id !== major.ID) sendData.newId = values.id;
-        if (values.name !== major.NAME) sendData.name = values.name;
-        if (values.sortName !== major.SORT_NAME)
-            sendData.sortName = values.sortName;
-        if (values.department !== major.DEPARTMENT)
-            sendData.department = values.department;
+        let sendData = values;
+        sendData.id = instructor.ID;
+        
         try {
-            const res = await axios.post(
-                "/api/manager/major/update",
+            const res = await axios.put(
+                "/api/instructor",
                 sendData,
                 { withCredentials: true }
             );
@@ -321,7 +262,7 @@ function EditMajor({ major }) {
             if (e) throw new Error(m);
             toast(m, { type: "success" });
             toggle();
-            dispatch(actions.majors.reloadMajors());
+            dispatch(actions.instructor.reloadInstructor());
             resetForm(initialValues);
         } catch (e) {
             toast(e.message, { type: "error" });
@@ -337,7 +278,7 @@ function EditMajor({ major }) {
             </button>
             <Modal isOpen={open} toggle={toggle}>
                 <ModalHeader toggle={toggle}>
-                    Chỉnh sửa chuyên ngành
+                    Chỉnh sửa thông tin giáo viên
                 </ModalHeader>
                 <Formik
                     initialValues={initialValues}
@@ -347,20 +288,30 @@ function EditMajor({ major }) {
                     {(formik) => (
                         <Form>
                             <ModalBody>
+                            <FormikField
+                                    type="text"
+                                    label="Mã cán bộ"
+                                    name="instructorId"
+                                />
+                                <FormikField
+                                    type="text"
+                                    label="Họ và tên"
+                                    name="fullName"
+                                />
+                                <FormikField
+                                    label="Ngày sinh"
+                                    name="dateOfBirth"
+                                    type="date"
+                                />
                                 <FormikSelectField
-                                    defaultValue={major.DEPARTMENT}
-                                    data={dataSelect}
-                                    label="Khoa"
-                                    name="department"
-                                />
-                                <FormikField label="ID" name="id" />
-                                <FormikField
-                                    label="Tên chuyên ngành"
-                                    name="name"
+                                    label="Giới tính"
+                                    name="gender"
+                                    data={Validation.dataSelectGender}
+                                    defaultValue={GENDER}
                                 />
                                 <FormikField
-                                    label="Tên viết tắt"
-                                    name="sortName"
+                                    label="Căn cước công dân"
+                                    name="citizenId"
                                 />
                             </ModalBody>
                             <ModalFooter>
@@ -387,7 +338,7 @@ function EditMajor({ major }) {
     );
 }
 
-function DeleteMajorModal({ major }) {
+function DeleteInstructor({ instructor }) {
     const dispatch = useDispatch();
     const initialValues = { password: "" };
     const validationSchema = Yup.object({
@@ -400,21 +351,21 @@ function DeleteMajorModal({ major }) {
     async function onSubmit(values, { setSubmitting, resetForm }) {
         setSubmitting(true);
         const sendData = {
-            id: major.ID,
+            id: instructor.ID,
             password: sha256(values.password),
         };
 
         try {
-            const res = await axios.post(
-                "/api/manager/major/delete",
-                sendData,
+            const res = await axios.delete(
+                "/api/instructor",
+                { data: sendData },
                 { withCredentials: true }
             );
             const { e, m } = res.data;
             if (e) throw new Error(m);
             toast(m, { type: "success" });
             toggle();
-            dispatch(actions.majors.reloadMajors());
+            dispatch(actions.instructor.reloadInstructor());
             resetForm(initialValues);
         } catch (e) {
             toast(e.message, { type: "error" });
