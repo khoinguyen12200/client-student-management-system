@@ -4,7 +4,7 @@ import { AiFillLeftCircle,AiFillDatabase } from "react-icons/ai";
 import {FaSchool,FaChalkboardTeacher} from 'react-icons/fa'
 import {HiUserGroup} from 'react-icons/hi'
 import {MdAccountBox} from 'react-icons/md'
-import { MdSupervisorAccount } from "react-icons/md";
+import { MdSchool } from "react-icons/md";
 import { motion } from "framer-motion";
 import { useSelector } from "react-redux";
 
@@ -17,6 +17,9 @@ import Deparment from "./Deparment"
 import Major from "./Major"
 import MajorClass from './MajorClass'
 import Instructor from "./Instructor"
+import Student from "./Student"
+import DetailClass from "./DetailClass"
+
 
 const variants = {
     expanded: {
@@ -96,6 +99,13 @@ export default function Manager() {
                     >
                         Giáo viên cố vấn
                     </LinkIcon>
+                    <LinkIcon
+                        expanded={expanded}
+                        link="/manager/student"
+                        icon={<MdSchool />}
+                    >
+                        Sinh viên
+                    </LinkIcon>
                 </div>
             </div>
             <div className="manager-content">
@@ -106,7 +116,11 @@ export default function Manager() {
                     <Route path="/manager/department" exact><Deparment/></Route>
                     <Route path="/manager/major" exact><Major/></Route>
                     <Route path="/manager/class-major" exact><MajorClass/></Route>
+                    <Route path="/manager/class-major/:name"><DetailClass/></Route>
                     <Route path="/manager/instructor" exact><Instructor/></Route>
+                    <Route path="/manager/student" exact><Student/></Route>
+                    
+                    
                 </Switch>
             </div>
         </div>

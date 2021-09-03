@@ -2,7 +2,7 @@ import React from "react";
 import { toast } from "react-toastify";
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
-import { Redirect } from "react-router-dom";
+import { Redirect, useLocation,Link } from "react-router-dom";
 import axios from "axios";
 
 import { MdModeEdit } from "react-icons/md";
@@ -23,33 +23,37 @@ import { sha256 } from "js-sha256";
 export default function MajorClass() {
     const departments = useSelector((state) => state.departments.list);
     const classMajors = useSelector((state) => state.class.list);
-    const [search, setSearch] = React.useState("");
+    const majors = useSelector((state) => state.majors.list)
 
-    const [filtterMajor, setFiltterMajor] = React.useState([]);
+    const query = new URLSearchParams(useLocation().search);
+    const s_department = query.get("department") || "";
+    const s_major = query.get("major") || "";
+    const s_search = query.get("search") || "";
 
-    function onFiltterChange(arr) {
-        setFiltterMajor(arr);
-    }
 
     const classMajorsAfterFiltter = React.useMemo(() => {
         let arr = classMajors.concat([]);
+        const id_department = departments.find(d => d.SORT_NAME == s_department)?.ID;
+        console.log("id-department",id_department)
 
-        arr = arr.filter((classMajor) => {
-            const majorId = classMajor.MAJOR + "";
-            return (
-                filtterMajor.includes(classMajor.MAJOR) ||
-                filtterMajor.includes(majorId)
-            );
-        });
-        arr = arr.filter((classMajor) => {
-            const { NAME } = classMajor;
-            var name = NAME.trim().toLowerCase();
-            var searchvalue = search.trim().toLowerCase();
-            return name.includes(searchvalue);
-        });
-
+        if(s_department){
+           
+            arr = arr.filter(cl =>  majors.findIndex(m => cl.MAJOR == m.ID && m.DEPARTMENT == id_department ) != -1)
+        }
+        if(s_major){
+            arr = arr.filter( cl => cl.MAJOR == majors.find(m => m.SORT_NAME == s_major)?.ID)
+        }
+        if(s_search){
+            arr = arr.filter(cl =>{
+                const {NAME,ID} = cl;
+                let name = (NAME+"").trim().toLowerCase()
+                let id = (ID+"").trim().toLowerCase()
+                let str = (s_search+"").trim().toLowerCase()
+                return name.includes(str) || id.includes(str)
+            })
+        }
         return arr;
-    }, [classMajors, filtterMajor, search]);
+    }, [classMajors,s_department,s_major,s_search]);
 
     return (
         <div className="major-class-page p-3">
@@ -58,21 +62,7 @@ export default function MajorClass() {
             </center>
             <div className="headSpace">
                 <div className="head1">
-                    <div className="input-group mb-3">
-                        <div className="input-group-prepend">
-                            <span className="input-group-text">
-                                <AiOutlineSearch />
-                                Tìm kiếm
-                            </span>
-                        </div>
-                        <input
-                            value={search}
-                            onChange={(e) => setSearch(e.target.value)}
-                            type="text"
-                            className="form-control"
-                        />
-                    </div>
-                    <Filtter onFiltter={onFiltterChange} />
+                    <Filtter />
                 </div>
                 <div>
                     <AddModal departments={departments} />
@@ -85,64 +75,89 @@ export default function MajorClass() {
     );
 }
 
-function Filtter({ onFiltter }) {
+function Filtter({  }) {
     const departments = useSelector((state) => state.departments.list);
     const majors = useSelector((state) => state.majors.list);
 
-    const [selectedDepart, setDepart] = React.useState(-1);
-    const [selectedMajor, setMajor] = React.useState(-1);
+    const query = new URLSearchParams(useLocation().search);
+    const s_department = query.get("department") || "";
+    const s_major = query.get("major") || "";
+    const s_search = query.get("search") || "";
 
-    React.useEffect(() => {
-        if (selectedDepart == -1) setMajor(-1);
-    }, [selectedDepart]);
+    const [search, setSearch] = React.useState(s_search);
+    const [selectedDepart, setDepart] = React.useState(s_department);
+    const [selectedMajor, setMajor] = React.useState(s_major);
+    const [redirect, setRedirect] = React.useState(null)
 
-    React.useEffect(() => {
-        let arr = majors.concat([]);
-        if (selectedDepart != -1) {
-            let arr = arr.filter((major) => {
-                return (major.DEPARTMENT = selectedDepart);
-            });
-        }
-        if (selectedMajor != -1) {
-            onFiltter([selectedMajor]);
-            return;
-        }
-        arr = arr.map((major) => major.ID);
+    React.useEffect(()=>{
+        if(redirect) setRedirect(null)
+    },[redirect])
 
-        return onFiltter(arr);
-    }, [selectedDepart, selectedMajor, majors]);
+    React.useEffect(()=>{
+        let params = new URLSearchParams();
+        params.set("search",search)
+        params.set("department",selectedDepart)
+        params.set("major",selectedMajor)
+        setRedirect("/manager/class-major?"+params.toString());
+    },[search,selectedDepart,selectedMajor])
 
     const selectorDepart = React.useMemo(() => {
         if (!departments) return [];
         let arr = departments.map((department) => ({
             key: department.NAME,
-            value: department.ID,
+            value: department.SORT_NAME,
         }));
-        arr.unshift({ key: "Hãy chọn giá trị", value: -1 });
+        arr.unshift({ key: "Hãy chọn giá trị", value: "" });
         return arr;
     }, [departments]);
     const selectorMajors = React.useMemo(() => {
-        if (!selectedDepart) return [];
+        if (!majors) return [];
         const arr1 = majors.filter((major) => {
-            return major.DEPARTMENT == selectedDepart;
+            return major.DEPARTMENT == departments.find(d => d.SORT_NAME == selectedDepart)?.ID;
         });
-        let arr2 = arr1.map((major) => ({ key: major.NAME, value: major.ID }));
-        arr2.unshift({ key: "Hãy chọn giá trị", value: -1 });
+
+        let arr2 = arr1.map((major) => ({ key: major.NAME, value: major.SORT_NAME }));
+        arr2.unshift({ key: "Hãy chọn giá trị", value: "" });
         return arr2;
     }, [selectedDepart, majors]);
 
     function onChangeDepart(e) {
         setDepart(e.target.value);
+        if(e.target.value == "") setMajor("")
     }
-
     function onChangeMajor(e) {
         setMajor(e.target.value);
     }
 
     return (
         <div>
-            <SelectField data={selectorDepart} onChange={onChangeDepart} />
-            <SelectField data={selectorMajors} onChange={onChangeMajor} />
+            {redirect && <Redirect to={redirect} />}
+            <div className="input-group mb-3">
+                <div className="input-group-prepend">
+                    <span className="input-group-text">
+                        <AiOutlineSearch />
+                        Tìm kiếm
+                    </span>
+                </div>
+                <input
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    type="text"
+                    className="form-control"
+                />
+            </div>
+            <SelectField
+                labelGroup="Lọc theo khoa"
+                data={selectorDepart}
+                defaultValue={s_department}
+                onChange={onChangeDepart}
+            />
+            <SelectField
+                labelGroup="Lọc theo ngành"
+                data={selectorMajors}
+                defaultValue={s_major}
+                onChange={onChangeMajor}
+            />
         </div>
     );
 }
@@ -202,7 +217,7 @@ function ClassMajor({ classMajor }) {
     return (
         <tr>
             <th>{ID}</th>
-            <td>{NAME}</td>
+            <td><Link to={`/manager/class-major/${NAME}`}>{NAME}</Link></td>
             <td>{COURSE}</td>
             <td>{instructorName}</td>
             <td>{majorObject && majorObject.NAME}</td>
@@ -231,7 +246,6 @@ function EditClass({ classMajor, defaultDepartment }) {
         }));
     }, [instructors]);
 
-
     const { ID, NAME, COURSE, MAJOR, INSTRUCTOR } = classMajor;
 
     const initialValues = {
@@ -244,7 +258,7 @@ function EditClass({ classMajor, defaultDepartment }) {
         name: Validation.majorClassName,
         course: Validation.course,
         major: Validation.id,
-        instructor:Validation.id,
+        instructor: Validation.id,
     });
 
     const [selectedDepart, setSeletedDepart] =
@@ -327,7 +341,7 @@ function EditClass({ classMajor, defaultDepartment }) {
                                     label="Thuộc chuyên ngành"
                                     name="major"
                                 />
-                                 <FormikSelectField
+                                <FormikSelectField
                                     defaultValue={INSTRUCTOR}
                                     data={selectInstructor}
                                     label="Giáo viên cố vấn"
@@ -478,8 +492,6 @@ function AddModal() {
         major: Validation.id,
         instructor: Validation.id,
     });
-
-    
 
     const [selectedDepart, setSeletedDepart] = React.useState(null);
     const departmentSelector = React.useMemo(() => {

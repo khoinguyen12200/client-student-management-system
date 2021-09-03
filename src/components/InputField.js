@@ -5,7 +5,7 @@ import { AiOutlineLoading3Quarters as Loading } from "react-icons/ai";
 import { motion } from "framer-motion";
 
 export default function InputField(props) {
-    const { label, value, onChange, type, error, ...rest } = props;
+    const { label, labelGroup, value, onChange, type, error, ...rest } = props;
 
     const [show, setShow] = React.useState(false);
     function toggleShow() {
@@ -15,6 +15,11 @@ export default function InputField(props) {
         <div className="input-field mb-3">
             {label && <label className="form-label">{label}</label>}
             <div className="input-group">
+                {labelGroup && (
+                    <div className="input-group-prepend">
+                        <span className=" input-group-text">{labelGroup}</span>
+                    </div>
+                )}
                 <input
                     className={"form-control " + (error && " is-invalid")}
                     type={
@@ -25,13 +30,15 @@ export default function InputField(props) {
                     {...rest}
                 />
                 {type == "password" && (
-                    <button
-                        type="button"
-                        className="btn-secondary btn"
-                        onClick={toggleShow}
-                    >
-                        {show ? <AiFillEyeInvisible /> : <AiFillEye />}
-                    </button>
+                    <div className="input-group-append">
+                        <button
+                            type="button"
+                            className="btn-secondary btn "
+                            onClick={toggleShow}
+                        >
+                            {show ? <AiFillEyeInvisible /> : <AiFillEye />}
+                        </button>
+                    </div>
                 )}
             </div>
 
@@ -54,18 +61,45 @@ export function FormikField({ label, ...rest }) {
 }
 
 export function SelectField(props) {
-    const { label, value, data,defaultValue, onChange, type, error, ...rest } = props;
+    const {
+        label,
+        labelGroup,
+        value,
+        data,
+        defaultValue,
+        onChange,
+        type,
+        error,
+        ...rest
+    } = props;
 
     return (
         <div className="input-field mb-3">
             {label && <label className="form-label">{label}</label>}
 
-            <select  {...rest} onChange={onChange} className="custom-select">
-                {defaultValue === null &&  <option value={null  } selected={true}>Hãy chọn giá trị</option>}
-                {data.map(({ key, value }, index) => (
-                    <option key={value} value={value} selected={value===defaultValue}>{key}</option>
-                ))}
-            </select>
+            <div className="input-group">
+                {labelGroup && (
+                    <div className="input-group-prepend">
+                        <span className=" input-group-text">{labelGroup}</span>
+                    </div>
+                )}
+                <select {...rest} onChange={onChange} className="custom-select">
+                    {defaultValue === null && (
+                        <option value={null} selected={true}>
+                            Hãy chọn giá trị
+                        </option>
+                    )}
+                    {data.map(({ key, value }, index) => (
+                        <option
+                            key={value}
+                            value={value}
+                            selected={value === defaultValue}
+                        >
+                            {key}
+                        </option>
+                    ))}
+                </select>
+            </div>
 
             {error && <div className="i-error">{error}</div>}
         </div>

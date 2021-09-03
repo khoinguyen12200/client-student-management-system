@@ -2,7 +2,7 @@ import React from "react";
 import { toast } from "react-toastify";
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
-import { Redirect } from "react-router-dom";
+import { Redirect, useLocation,Link } from "react-router-dom";
 import axios from "axios";
 
 import { MdModeEdit } from "react-icons/md";
@@ -20,18 +20,18 @@ import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
 import { sha256 } from "js-sha256";
 
 export default function MajorsPage() {
-    const [search, setSearch] = React.useState("");
+    const query = new URLSearchParams(useLocation().search);
+    const s_department = query.get("department") || "";
+    const s_search = query.get("search") || "";
     const departments = useSelector((state) => state.departments.list);
     const majors = useSelector((state) => state.majors.list);
 
-    const [departFilter, setDepartFilter] = React.useState(-1);
-    function onSelectChange(e) {
-        setDepartFilter(e.target.value);
-    }
-
     const majorsAfterFilter = React.useMemo(() => {
-        try {
+        const departmentSelected = departments.find((d) => {
+            return d.SORT_NAME == s_department;
+        })?.ID;
 
+        try {
             const arr = majors.filter((major) => {
                 let { ID, DEPARTMENT, NAME, SORT_NAME } = major;
                 ID = (ID + "").trim().toLowerCase();
@@ -40,20 +40,24 @@ export default function MajorsPage() {
                 SORT_NAME = (SORT_NAME + "").trim().toLowerCase();
 
                 if (
-                    ID.includes(search) ||
-                    NAME.includes(search) ||
-                    SORT_NAME.includes(search)
+                    ID.includes(s_search) ||
+                    NAME.includes(s_search) ||
+                    SORT_NAME.includes(s_search)
                 ) {
                     return true;
                 }
                 return false;
             });
-            const arr2 = arr.filter((major)=>(departFilter==-1 || major.DEPARTMENT == departFilter))
+            const arr2 = arr.filter(
+                (major) =>
+                    !departmentSelected ||
+                    major.DEPARTMENT == departmentSelected
+            );
             return arr2;
         } catch (err) {
             return [];
         }
-    }, [majors, search, departFilter]);
+    }, [majors, s_search, s_department]);
 
     return (
         <div className="major-page p-3">
@@ -62,44 +66,7 @@ export default function MajorsPage() {
             </center>
             <div className="headSpace">
                 <div className="head1">
-                    <div className="input-group mb-3">
-                        <div className="input-group-prepend">
-                            <span className="input-group-text">
-                                <AiOutlineSearch />
-                                Tìm kiếm
-                            </span>
-                        </div>
-                        <input
-                            value={search}
-                            onChange={(e) => setSearch(e.target.value)}
-                            type="text"
-                            className="form-control"
-                        />
-                    </div>
-                    <div className="input-group mb-3">
-                        <div className="input-group-prepend">
-                            <label
-                                className="input-group-text"
-                                for="inputGroupSelect01"
-                            >
-                                Lọc theo khoa
-                            </label>
-                        </div>
-                        <select
-                            onChange={onSelectChange}
-                            className="custom-select"
-                            id="inputGroupSelect01"
-                        >
-                            <option selected value={-1}>
-                                Chọn giá trị
-                            </option>
-                            {departments.map(({ ID, NAME }) => (
-                                <option key={ID} value={ID}>
-                                    {NAME}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
+                    <Filter />
                 </div>
                 <div>
                     <AddModal departments={departments} />
@@ -107,6 +74,78 @@ export default function MajorsPage() {
             </div>
             <div className="list">
                 <MajorList majors={majorsAfterFilter} />
+            </div>
+        </div>
+    );
+}
+
+function Filter() {
+    
+
+    const query = new URLSearchParams(useLocation().search);
+    const s_department = query.get("department");
+    const s_search = query.get("search");
+    const departments = useSelector((state) => state.departments.list);
+    const [search, setSearch] = React.useState(s_search || "");
+    const [department,setDepartment] = React.useState(s_department);
+
+    React.useEffect(() => {
+        let params = new URLSearchParams();
+        params.set("search",search)
+        params.set("department",department)
+        setRedirect(`/manager/major?${params.toString()}`);
+    },[department,search])
+
+    const [redirect, setRedirect] = React.useState(null);
+    React.useEffect(() => {
+        if (redirect != null) setRedirect(null);
+    }, [redirect]);
+
+    function onSelectChange(e) {
+        setDepartment(e.target.value);
+        
+    }
+
+    return (
+        <div className="head1">
+            <div className="input-group mb-3">
+                <div className="input-group-prepend">
+                    <span className="input-group-text">
+                        <AiOutlineSearch />
+                        Tìm kiếm
+                    </span>
+                </div>
+                <input
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    type="text"
+                    className="form-control"
+                />
+            </div>
+
+            <div className="input-group mb-3">
+                {redirect && <Redirect to={redirect} />}
+                <div className="input-group-prepend">
+                    <label
+                        className="input-group-text"
+                        for="inputGroupSelect01"
+                    >
+                        Lọc theo khoa
+                    </label>
+                </div>
+                <select
+                    onChange={onSelectChange}
+                    className="custom-select"
+                    id="inputGroupSelect01"
+                    defaultValue={s_department}
+                >
+                    <option value={""}>Chọn giá trị</option>
+                    {departments.map(({ ID, NAME, SORT_NAME }) => (
+                        <option key={ID} value={SORT_NAME}>
+                            {NAME}
+                        </option>
+                    ))}
+                </select>
             </div>
         </div>
     );
@@ -250,17 +289,23 @@ function MajorList({ majors }) {
 function Major({ major }) {
     const { ID, NAME, SORT_NAME, DEPARTMENT } = major;
     const departments = useSelector((state) => state.departments.list);
-    const departmentName = React.useMemo(() => {
+    const department = React.useMemo(() => {
         const d = departments.find((de) => de.ID === DEPARTMENT);
-        return d && d.NAME;
+        return d ;
     }, [departments, DEPARTMENT]);
+    const link = React.useMemo(()=>{
+        let params = new URLSearchParams();
+        params.set('department', department.SORT_NAME)
+        params.set("major",SORT_NAME)
+        return "/manager/class-major?"+params.toString();
+    },[department,SORT_NAME])
     return (
         <tr>
             <th scope="row">{ID}</th>
 
-            <td>{NAME}</td>
+            <td><Link to={link}>{NAME}</Link></td>
             <td>{SORT_NAME}</td>
-            <td>{departmentName || ""}</td>
+            <td>{department && department.NAME}</td>
             <td>
                 <center>
                     <EditMajor major={major} />

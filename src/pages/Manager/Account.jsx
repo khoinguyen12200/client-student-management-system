@@ -34,7 +34,7 @@ export default function Account() {
                     </div>
 
                     <div className="form-control">******</div>
-                    <div className="input-group-prepend">
+                    <div className="input-group-append">
                         <Link
                             to="/manager/account/change-password"
                             className="btn btn-secondary"
@@ -49,7 +49,7 @@ export default function Account() {
                     </div>
 
                     <div className="form-control">{info.FULL_NAME}</div>
-                    <div className="input-group-prepend">
+                    <div className="input-group-append">
                         <Link
                             to="/manager/account/change-name"
                             className="btn btn-secondary"

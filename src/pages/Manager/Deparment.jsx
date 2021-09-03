@@ -2,7 +2,7 @@ import React from "react";
 import { toast } from "react-toastify";
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
-import { Redirect } from "react-router-dom";
+import { Redirect,Link } from "react-router-dom";
 import axios from "axios";
 
 import { MdModeEdit } from "react-icons/md";
@@ -188,7 +188,7 @@ function Department({ department }) {
     return (
         <tr>
             <th>{ID}</th>
-            <td>{NAME}</td>
+            <td><Link to={`/manager/major?department=${SORT_NAME}`}>{NAME}</Link></td>
             <td>{SORT_NAME}</td>
             <td>
                 <center>
