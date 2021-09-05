@@ -43,7 +43,7 @@ export default function Departments() {
     return (
         <div className="department p-3">
             <center>
-                <h1>Khoa - Đoàn</h1>
+                <h1 className="page-title">Khoa - Đoàn</h1>
             </center>
             <div className="department-content p-2">
                 <div className="headSpace">

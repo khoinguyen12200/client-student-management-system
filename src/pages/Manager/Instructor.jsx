@@ -41,7 +41,7 @@ export default function InstructorPage() {
     return (
         <div className="instructor-page p-3">
             <center className="mb-3">
-                <h1>Giáo viên cố vấn</h1>
+                <h1 className="page-title">Giáo viên cố vấn</h1>
             </center>
             <div className="headSpace">
                 <div>

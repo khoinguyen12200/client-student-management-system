@@ -2,7 +2,7 @@ import React from "react";
 import { Switch, Route, Link ,useLocation,Redirect } from "react-router-dom";
 import { AiFillLeftCircle,AiFillDatabase } from "react-icons/ai";
 import {FaSchool,FaChalkboardTeacher} from 'react-icons/fa'
-import {HiUserGroup} from 'react-icons/hi'
+import {HiUserGroup,HiKey} from 'react-icons/hi'
 import {MdAccountBox} from 'react-icons/md'
 import { MdSchool } from "react-icons/md";
 import { motion } from "framer-motion";
@@ -51,9 +51,13 @@ export default function Manager() {
                         initial={!expanded ? "expanded" : "collapsed"}
                         animate={expanded ? "expanded" : "collapsed"}
                         transition={{ type: "tween", duration: 0.5 }}
-                        className="name"
+                       
                     >
-                        {info.FULL_NAME}
+                        <div  className="name">
+                            <HiKey className="mr-2"/>
+                            {info.FULL_NAME}
+                        </div>
+                       
                     </motion.div>
                     <motion.div
                         animate={!expanded ? { rotateY: 180 } : { rotateY: 0 }}

@@ -52,7 +52,7 @@ export default function ChangePassword() {
         <div className="change-password-page p-3">
             {redirect && <Redirect to={redirect} />}
             <center className="mb-5">
-                <h1>Đổi mật khẩu</h1>
+                <h1 className="page-title">Đổi mật khẩu</h1>
             </center>
             <div className="form-container">
                 <Formik

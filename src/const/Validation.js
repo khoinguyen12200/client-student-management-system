@@ -53,7 +53,7 @@ export const dataSelectGender = [{key:"Nam",value:"M"},{key:"Nữ",value:"F"}];
 export const citizenId = Yup.string().required("Không được bỏ trống").matches(/^[0-9]{0,}$/,"Chỉ cho phép số").max(11,"Tối đa 11 ký tự").min(9,"Tối thiểu 9 ký tự")
 export const instructorId = Yup.string().required("Không được bỏ trống").matches(/^[A-Z0-9]{0,}$/,"Chỉ cho phép số và chữ in hoa").max(11,"Tối đa 11 ký tự").min(5,"Tối thiểu 5 ký tự")
 export const studentId = Yup.string().required("Không được bỏ trống").matches(/^[A-Z0-9]{0,}$/,"Chỉ cho phép số và chữ in hoa").max(11,"Tối đa 11 ký tự").min(5,"Tối thiểu 5 ký tự")
-
+export const address = Yup.string().required("Không được bỏ trống")
 
 
 

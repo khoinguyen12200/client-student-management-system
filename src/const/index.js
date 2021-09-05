@@ -17,3 +17,8 @@ export function toVNDate(date){
     }
     return dateFormat(d,format);
 }
+
+export const paths ={
+    login:"/",
+    manager:"/manager",
+}

@@ -50,7 +50,7 @@ export default function ChangeName() {
         <div className="change-name-page p-3">
             {redirect && <Redirect to={redirect} />}
             <center className="mb-5">
-                <h1>Đổi tên hiển thị</h1>
+                <h1 className="page-title">Đổi tên hiển thị</h1>
             </center>
             <div className="form-container">
                 <Formik

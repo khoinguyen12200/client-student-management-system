@@ -62,7 +62,7 @@ export default function MajorsPage() {
     return (
         <div className="major-page p-3">
             <center className="mb-3">
-                <h1>Chuyên ngành</h1>
+                <h1 className="page-title">Chuyên ngành</h1>
             </center>
             <div className="headSpace">
                 <div className="head1">
@@ -81,7 +81,8 @@ export default function MajorsPage() {
 
 function Filter() {
     
-
+    const location = useLocation();
+  
     const query = new URLSearchParams(useLocation().search);
     const s_department = query.get("department");
     const s_search = query.get("search");
@@ -93,7 +94,7 @@ function Filter() {
         let params = new URLSearchParams();
         params.set("search",search)
         params.set("department",department)
-        setRedirect(`/manager/major?${params.toString()}`);
+        setRedirect(`${location.pathname}?${params.toString()}`);
     },[department,search])
 
     const [redirect, setRedirect] = React.useState(null);

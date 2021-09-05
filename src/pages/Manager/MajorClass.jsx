@@ -58,7 +58,7 @@ export default function MajorClass() {
     return (
         <div className="major-class-page p-3">
             <center className="mb-3">
-                <h1>Lớp chuyên ngành</h1>
+                <h1 className="page-title">Lớp chuyên ngành</h1>
             </center>
             <div className="headSpace">
                 <div className="head1">
@@ -75,7 +75,7 @@ export default function MajorClass() {
     );
 }
 
-function Filtter({  }) {
+function Filtter() {
     const departments = useSelector((state) => state.departments.list);
     const majors = useSelector((state) => state.majors.list);
 

@@ -33,7 +33,7 @@ export default function InputField(props) {
                     <div className="input-group-append">
                         <button
                             type="button"
-                            className="btn-secondary btn "
+                            className="btn-secondary btn"
                             onClick={toggleShow}
                         >
                             {show ? <AiFillEyeInvisible /> : <AiFillEye />}
@@ -89,7 +89,7 @@ export function SelectField(props) {
                             Hãy chọn giá trị
                         </option>
                     )}
-                    {data.map(({ key, value }, index) => (
+                    {data && data.map(({ key, value }, index) => (
                         <option
                             key={value}
                             value={value}

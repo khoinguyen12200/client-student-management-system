@@ -27,19 +27,20 @@ function App() {
         dispatch(actions.majors.reloadMajors());
         dispatch(actions.class.reloadClass())
         dispatch(actions.instructor.reloadInstructor());
+        dispatch(actions.student.reloadStudent())
     }, [info]);
     return (
         <div className="App">
             <ToastContainer />
-            <div>
+            {/* <div>
                 <Navbar />
-            </div>
+            </div> */}
             <div>
                 <Switch>
-                    <Route path="/" exact>
+                    {/* <Route path="/" exact>
                         <Home />
-                    </Route>
-                    <Route path="/login" exact>
+                    </Route> */}
+                    <Route path="/" exact>
                         <Login />
                     </Route>
                     {info && (
