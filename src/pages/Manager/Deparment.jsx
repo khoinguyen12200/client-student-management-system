@@ -229,6 +229,8 @@ function EditDepartmentModal({ department }) {
         if (values.name !== department.NAME) sendData.name = values.name;
         if (values.sortName !== department.SORT_NAME)
             sendData.sortName = values.sortName;
+
+        console.log(sendData);
         try {
             const res = await axios.post(
                 "/api/manager/department/update",

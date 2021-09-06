@@ -26,7 +26,7 @@ body {
 }
 
 .page-title {
-    font-family:  sans-serif,"Lucida Sans Unicode", Arial, Helvetica;
+    font-family: 'Times New Roman', Times, serif
 }
 .nowrap{
     white-space: nowrap;
@@ -102,7 +102,8 @@ body {
                 font-size: 1.2em;
                 overflow: hidden;
                 white-space: nowrap;
-                font-family: 'Times New Roman', Times, serif;
+                font-family: monospace;
+                font-weight: bold;
             }
             .toggle {
                 font-size: 2em;

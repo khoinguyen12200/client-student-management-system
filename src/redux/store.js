@@ -6,7 +6,7 @@ import majorsReducer,{actions as majorsActions} from './majors'
 import classReducer,{actions as classActions} from './classMajor'
 import instructorReducer,{actions as instructorActions} from './instructor'
 import studentReducer,{actions as studentActions} from './student'
-
+import editableReducer,{actions as editableActions} from './editable'
 
 
 const reducer = combineReducers({
@@ -16,6 +16,7 @@ const reducer = combineReducers({
     class:classReducer,
     instructor:instructorReducer,
     student:studentReducer,
+    editable:editableReducer,
 })
 
 const store = createStore(reducer,applyMiddleware(thunk));
@@ -28,5 +29,6 @@ export const actions = {
     class:classActions,
     instructor:instructorActions,
     student:studentActions,
+    editable:editableActions
 }
 export default store;

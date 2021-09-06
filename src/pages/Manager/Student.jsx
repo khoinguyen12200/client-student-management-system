@@ -226,6 +226,29 @@ function StudentList() {
             return fullname.includes(search) || studentId.includes(search);
         });
 
+        if(s_department){
+            arr = arr.filter((student) =>{
+                const cl = classMajors.find(cl => cl.ID == student.CLASS)
+                const ma = majors.find(ma => ma.ID == cl?.MAJOR)
+                const de = departments.find(de => de.ID == ma?.DEPARTMENT)
+                
+                return de?.SORT_NAME == s_department
+            })
+        }
+        if(s_major){
+            arr = arr.filter((student) =>{
+                const cl = classMajors.find(cl => cl.ID == student.CLASS)
+                const ma = majors.find(ma => ma.ID == cl?.MAJOR)
+                return ma.SORT_NAME == s_major
+            })
+        }
+        if(s_class){
+            arr = arr.filter((student) =>{
+                const cl = classMajors.find(cl => cl.ID == student.CLASS)
+                return cl.NAME == s_class
+            })
+        }
+
         return arr;
     }, [students, s_search, s_department, s_major, s_class]);
 
@@ -281,7 +304,7 @@ function Student({ student }) {
         <tr>
             <th>{STUDENT_ID}</th>
             <td>{FULL_NAME}</td>
-            <td>{classMajor?.NAME}</td>
+            <td><Link to={Const.paths.detailClass(classMajor?.NAME)}>{classMajor?.NAME}</Link></td>
             <td>{major?.NAME}</td>
             <td>{department?.NAME}</td>
             <td>{ADDRESS}</td>

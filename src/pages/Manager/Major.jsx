@@ -296,7 +296,7 @@ function Major({ major }) {
     }, [departments, DEPARTMENT]);
     const link = React.useMemo(()=>{
         let params = new URLSearchParams();
-        params.set('department', department.SORT_NAME)
+        params.set('department', department?.SORT_NAME)
         params.set("major",SORT_NAME)
         return "/manager/class-major?"+params.toString();
     },[department,SORT_NAME])

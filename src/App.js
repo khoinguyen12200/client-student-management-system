@@ -28,6 +28,7 @@ function App() {
         dispatch(actions.class.reloadClass())
         dispatch(actions.instructor.reloadInstructor());
         dispatch(actions.student.reloadStudent())
+        dispatch(actions.editable.reloadEditable())
     }, [info]);
     return (
         <div className="App">

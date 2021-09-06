@@ -49,7 +49,6 @@ const autoLogin = () => async (dispatch, getState) =>{
     if(current){
         try{
             const res = await axios.get("/api/manager/auto-login", {},{withCredentials:true});
-            console.log(res)
             const { e, m, info } = res.data;
             if(e) throw new Error(m);
             dispatch(actions.setInfo(info));
