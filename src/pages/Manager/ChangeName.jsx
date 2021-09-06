@@ -38,7 +38,7 @@ export default function ChangeName() {
             const { e, m } = res.data;
             if (e) throw new Error(m);
             toast(m, { type: "success" });
-            dispatch(actions.manager.updateName(newName))
+            dispatch(actions.account.updateName(newName))
             setRedirect("/manager/account");
         } catch (e) {
             toast(e.message, { type: "error" });

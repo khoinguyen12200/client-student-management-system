@@ -31,13 +31,13 @@ export default function InputField(props) {
                 />
                 {type == "password" && (
                     <div className="input-group-append">
-                        <button
+                        <div
                             type="button"
                             className="btn-secondary btn"
                             onClick={toggleShow}
                         >
                             {show ? <AiFillEyeInvisible /> : <AiFillEye />}
-                        </button>
+                        </div>
                     </div>
                 )}
             </div>

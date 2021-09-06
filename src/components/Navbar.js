@@ -4,7 +4,7 @@ import Shadow from "./ShadowNav";
 import { useSelector } from "react-redux";
 
 export default function Navbar() {
-    const info = useSelector((state) => state.manager.info);
+    const info = useSelector((state) => state.account.info);
 
     return (
         <>

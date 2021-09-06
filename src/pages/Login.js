@@ -14,13 +14,13 @@ import InputField, {
 } from "../components/InputField";
 export default function Login() {
     const dispatch = useDispatch();
-    const info = useSelector((state) => state.manager.info);
+    const info = useSelector((state) => state.account.info);
 
     const [redirect, setRedirect] = React.useState(null);
     async function onSubmit(values, { setSubmitting }) {
         setSubmitting(true);
         dispatch(
-            actions.manager.login(values, (success) => {
+            actions.account.login(values, (success) => {
                 setSubmitting(false);
                 if (success) setRedirect("/manager");
             })

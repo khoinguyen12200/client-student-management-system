@@ -8,7 +8,7 @@ import * as Const from "../../const";
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
 export default function Account() {
     const dispatch = useDispatch();
-    const info = useSelector((state) => state.manager.info);
+    const info = useSelector((state) => state.account.info);
     const [redirect, setRedirect] = React.useState(null);
 
     return (
@@ -65,7 +65,7 @@ function LogOutButton({}) {
     function logout() {
         setRedirect(Const.paths.login);
         setTimeout(() => {
-            dispatch(actions.manager.logout());
+            dispatch(actions.account.logout());
         }, 1000);
     }
 

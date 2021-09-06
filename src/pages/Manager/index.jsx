@@ -1,13 +1,17 @@
 import React from "react";
 import { Switch, Route, Link, useLocation, Redirect } from "react-router-dom";
-import { AiFillLeftCircle, AiFillDatabase,AiFillSetting } from "react-icons/ai";
-import { FaSchool, FaChalkboardTeacher } from "react-icons/fa";
+import {
+    AiFillLeftCircle,
+    AiFillDatabase,
+    AiFillSetting,
+} from "react-icons/ai";
+import { FaSchool, FaChalkboardTeacher, FaUserTie } from "react-icons/fa";
 import { HiUserGroup, HiKey } from "react-icons/hi";
 import { MdAccountBox } from "react-icons/md";
 import { MdSchool } from "react-icons/md";
 import { motion } from "framer-motion";
 import { useSelector } from "react-redux";
-import * as Const from '../../const'
+import * as Const from "../../const";
 import Account from "./Account";
 import ChangePassword from "./ChangePassword";
 import ChangeName from "./ChangeName";
@@ -18,7 +22,8 @@ import MajorClass from "./MajorClass";
 import Instructor from "./Instructor";
 import Student from "./Student";
 import DetailClass from "./DetailClass";
-import System from './System'
+import System from "./System";
+import Administrator from "./Administrator";
 
 const variants = {
     expanded: {
@@ -32,7 +37,7 @@ const variants = {
 };
 
 export default function Manager() {
-    const info = useSelector((state) => state.manager.info);
+    const info = useSelector((state) => state.account.info);
     const editable = useSelector((state) => state.editable.info);
     const location = useLocation();
     const [expanded, setExpanded] = React.useState(true);
@@ -73,7 +78,7 @@ export default function Manager() {
                     >
                         Tài khoản
                     </LinkIcon>
-                    {editable?.MANAGER == info?.ID && (
+                    {info?.ROOT == 1 && (
                         <LinkIcon
                             expanded={expanded}
                             link={Const.paths.system}
@@ -82,6 +87,14 @@ export default function Manager() {
                             Hệ thống
                         </LinkIcon>
                     )}
+                    <LinkIcon
+                        expanded={expanded}
+                        link={Const.paths.administrator}
+                        icon={<FaUserTie />}
+                    >
+                        Quản trị viên
+                    </LinkIcon>
+
                     <LinkIcon
                         expanded={expanded}
                         link="/manager/department"
@@ -128,7 +141,6 @@ export default function Manager() {
                         <ChangePassword />
                     </Route>
                     <Route path="/manager/account/change-name" exact>
-                        {" "}
                         <ChangeName />
                     </Route>
                     <Route path="/manager/department" exact>
@@ -149,8 +161,13 @@ export default function Manager() {
                     <Route path="/manager/student" exact>
                         <Student />
                     </Route>
-                    <Route path={Const.paths.system} exact>
-                        <System />
+                    {info?.ROOT && (
+                        <Route path={Const.paths.system} exact>
+                            <System />
+                        </Route>
+                    )}
+                    <Route path={Const.paths.administrator} exact>
+                        <Administrator />
                     </Route>
                 </Switch>
             </div>

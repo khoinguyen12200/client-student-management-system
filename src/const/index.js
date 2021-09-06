@@ -22,5 +22,6 @@ export const paths = {
     login:"/",
     manager:"/manager",
     detailClass: (cl) => (`/manager/class-major/${cl}`),
-    system:"/manager/system"
+    system:"/manager/system",
+    administrator:"/manager/administrator",
 }

@@ -16,10 +16,10 @@ import { useSelector, useDispatch } from "react-redux";
 import { actions } from "./redux/store";
 
 function App() {
-    const info = useSelector((state) => state.manager.info);
+    const info = useSelector((state) => state.account.info);
     const dispatch = useDispatch();
     React.useEffect(() => {
-        dispatch(actions.manager.autoLogin());
+        dispatch(actions.account.autoLogin());
     }, []);
     React.useEffect(() => {
         if (!info) return;
@@ -29,6 +29,7 @@ function App() {
         dispatch(actions.instructor.reloadInstructor());
         dispatch(actions.student.reloadStudent())
         dispatch(actions.editable.reloadEditable())
+        dispatch(actions.manager.reloadManager())
     }, [info]);
     return (
         <div className="App">

@@ -32,6 +32,11 @@ export default function System() {
             </center>
             <div className="headSpace">
                 <table class="table table-striped table-bordered">
+                    <thead className="thead-dark">
+                        <tr>
+                            <th>Quyền thày đổi hệ thống</th>
+                        </tr>
+                    </thead>
                     <tbody>
                         <SystemCheckRow
                             checked={editable?.DEPARTMENT}
@@ -74,21 +79,23 @@ function SystemCheckRow({ checked, updateKey, label }) {
 
     const dispatch = useDispatch();
     function onChange(e) {
-        setNewCheck(e.target.checked)
+        setNewCheck(e.target.checked);
     }
     const [newCheck, setNewCheck] = React.useState(null);
     const toggle = () => {
         setNewCheck(null);
     };
- 
-    async function onSubmit(values,{setSubmitting}) {
+
+    async function onSubmit(values, { setSubmitting }) {
         setSubmitting(true);
 
         setDisabled(true);
 
         try {
-
-            const dataform = { [updateKey]: newCheck,password:sha256(values.password) };
+            const dataform = {
+                [updateKey]: newCheck,
+                password: sha256(values.password),
+            };
 
             const res = await axios.patch(`/api/editable`, dataform, {
                 withCredentials: true,
@@ -96,11 +103,11 @@ function SystemCheckRow({ checked, updateKey, label }) {
             const { e, m } = res.data;
             if (e) throw new Error(m);
             toast(m, { type: "success" });
-            toggle()
+            toggle();
             dispatch(actions.editable.reloadEditable());
         } catch (e) {
             toast(e.message, { type: "error" });
-            toggle()
+            toggle();
         }
         setDisabled(false);
 
@@ -147,7 +154,9 @@ function SystemCheckRow({ checked, updateKey, label }) {
                         <Form>
                             <ModalBody>
                                 <div className="alert alert-danger">
-                                   {`Bạn có muốn ${newCheck ? "MỞ" : "TẮT"} quyền chỉnh sửa nội dung này không ?`}
+                                    {`Bạn có muốn ${
+                                        newCheck ? "MỞ" : "TẮT"
+                                    } quyền chỉnh sửa nội dung này không ?`}
                                 </div>
                                 <FormikField
                                     label="Mật khẩu"
