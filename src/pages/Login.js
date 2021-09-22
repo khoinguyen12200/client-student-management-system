@@ -35,9 +35,7 @@ export default function Login() {
     return (
         <div className="login-page">
             {redirect && <Redirect to={redirect} />}
-            <center>
-                <h1 className="title">Hệ thống quản lý sinh viên</h1>
-            </center>
+
             <div className="flex-space">
                 <div className="content">
                     <div className="card shadow ">
@@ -61,7 +59,7 @@ export default function Login() {
                                         type="password"
                                     />
                                     <LoadingButton
-                                        className="btn btn-primary mt-3"
+                                        className="btn btn-primary mt-4 mb-4"
                                         type="submit"
                                         loading={formik.isSubmitting}
                                     >
@@ -74,7 +72,10 @@ export default function Login() {
                 </div>
 
                 <div className="decor">
-                    <img src="./admin-system.svg"/>
+                    <center>
+                        <h1 className="title">Hệ thống quản lý sinh viên</h1>
+                    </center>
+                    <img className="" src="/admin-system.svg"/>
                 </div>
             </div>
         </div>
