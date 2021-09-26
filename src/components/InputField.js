@@ -22,14 +22,15 @@ export default function InputField(props) {
                 )}
                 <input
                     className={"form-control " + (error && " is-invalid")}
-                    type={
-                        type !== "password" ? type : show ? "text" : "password"
-                    }
+                    // type={
+                    //     type !== "password" ? type : show ? "text" : "password"
+                    // }
+                    type={type}
                     value={value}
                     onChange={onChange}
                     {...rest}
                 />
-                {type == "password" && (
+                {/* {type == "password" && (
                     <div className="input-group-append">
                         <div
                             type="button"
@@ -39,7 +40,7 @@ export default function InputField(props) {
                             {show ? <AiFillEyeInvisible /> : <AiFillEye />}
                         </div>
                     </div>
-                )}
+                )} */}
             </div>
 
             {error && <div className="i-error">{error}</div>}

@@ -26,8 +26,8 @@ body {
 }
 
 .page-title {
-    margin-top:20px;
-    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin-top: 20px;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 .nowrap {
     white-space: nowrap;
@@ -92,6 +92,7 @@ body {
             display: flex;
             justify-content: space-between;
             padding: 1em;
+            margin-bottom: 1em;
             align-items: center;
             .name {
                 color: rgb(255, 255, 255);
@@ -112,24 +113,71 @@ body {
         .nav-content {
             display: flex;
             flex-direction: column;
-            .enabled {
-                background-color: rgba(46, 102, 255, 0.63);
-            }
+            
             .link {
-                display: flex;
-                flex-direction: row;
-                color: white;
+                
                 text-decoration: none;
-                align-items: center;
-                padding: 1em;
-                font-size: 1em;
-                .icon {
-                    line-height: 0;
-                    font-size: 2em;
+                .content {
+                    display: flex;
+                    flex-direction: row;
+                    color: white;
+                    text-decoration: none;
+                    align-items: center;
+                    padding: 1em 1em;
+                    font-size: 1em;
+                    .icon {
+                        z-index: 4;
+                        line-height: 0;
+                        font-size: 2em;
+                    }
+                    .name {
+                        z-index: 4;
+                        overflow: hidden;
+                        white-space: nowrap;
+                    }
                 }
-                .name {
-                    overflow: hidden;
-                    white-space: nowrap;
+            }
+            .enabled {
+                position: relative;
+                background-color: white;
+                border-top-left-radius: 20px;
+                border-bottom-left-radius: 20px;
+                * {
+                    color: rgb(32, 34, 39);
+                }
+                .top {
+                    height: 20px;
+                    top: -20px;
+                    border-bottom-right-radius: 20px;
+                    width: 100%;
+                    z-index: 2;
+                    background-color: rgb(32, 34, 39);
+                    position: absolute;
+                }
+                .topback {
+                    height: 20px;
+                    top: -20px;
+                    z-index: 1;
+                    width: 100%;
+                    background-color: white;
+                    position: absolute;
+                }
+                .bot {
+                    height: 20px;
+                    bottom: -20px;
+                    border-top-right-radius: 20px;
+                    width: 100%;
+                    z-index: 2;
+                    background-color: rgb(32, 34, 39);
+                    position: absolute;
+                }
+                .botback {
+                    height: 20px;
+                    bottom: -20px;
+                    z-index: 1;
+                    width: 100%;
+                    background-color: white;
+                    position: absolute;
                 }
             }
         }

@@ -183,16 +183,23 @@ function LinkIcon({ icon, link, children, expanded }) {
 
     return (
         <Link to={link} className={enbled ? "link enabled" : "link"}>
-            <div className="icon">{icon}</div>
-            <motion.div
-                variants={variants}
-                initial={!expanded ? "expanded" : "collapsed"}
-                animate={expanded ? "expanded" : "collapsed"}
-                transition={{ type: "tween", duration: 0.5 }}
-                className="name"
-            >
-                <div>{children}</div>
-            </motion.div>
+            
+            <div className="bot"/>
+            <div className="topback"/>
+            <div className="top"/>
+            <div className="botback"/>
+            <div className="content">
+                <div className="icon">{icon}</div>
+                <motion.div
+                    variants={variants}
+                    initial={!expanded ? "expanded" : "collapsed"}
+                    animate={expanded ? "expanded" : "collapsed"}
+                    transition={{ type: "tween", duration: 0.5 }}
+                    className="name"
+                >
+                    <div>{children}</div>
+                </motion.div>
+            </div>
         </Link>
     );
 }
